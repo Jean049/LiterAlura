@@ -6,12 +6,13 @@ import jakarta.persistence.*;
 import java.util.List;
 
 @Entity
+@Table(name = "idioma", schema = "public")
 public class Idioma {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private int id;
     private String siglas;
-    @OneToMany(mappedBy = "id", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "idioma", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     List<Libro> libros;
 
     public Idioma() {}
@@ -41,12 +42,13 @@ public class Idioma {
     }
 
     public void setLibros(List<Libro> libros) {
+        libros.forEach(e -> e.setIdioma(this));
         this.libros = libros;
     }
 
     @Override
     public String toString() {
-        return "Idioma:" + "\n  Codigo: " + siglas +
-                "\n Libros: " + libros;
+        return "Idioma:" + "\n    Codigo: " + siglas +
+                "\n    Libros: " + libros;
     }
 }

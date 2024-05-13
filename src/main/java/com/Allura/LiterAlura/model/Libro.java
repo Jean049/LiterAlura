@@ -3,12 +3,14 @@ package com.Allura.LiterAlura.model;
 import com.Allura.LiterAlura.model.DTA.DatosAutor;
 import com.Allura.LiterAlura.model.DTA.DatosIdiomas;
 import com.Allura.LiterAlura.model.DTA.DatosLibros;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 
 @Entity
+@Table(name = "libro", schema = "public")
 public class Libro {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private int id;
     private String titulo;
     @ManyToOne
@@ -24,8 +26,8 @@ public class Libro {
         this.titulo = datosLibros.titulo();
         this.idApi = datosLibros.id();
         this.autor = new Autor(datosLibros.autor().isEmpty() ?
-                new DatosAutor("Unknown", 0) :
-                datosLibros.autor().get(0));
+                new DatosAutor("Unknown", 0, 0)
+                : datosLibros.autor().get(0));
         this.idioma = new Idioma(new DatosIdiomas(datosLibros.idiomas()));
         this.numeroDescargas = datosLibros.numeroDescargas();
     }
@@ -80,7 +82,7 @@ public class Libro {
 
     @Override
     public String toString() {
-        return "Libro:  \nTitulo: " + titulo + "    \nAutor: " + autor + "  \nIdiomas: " + idioma + "  \nNumeroDescargas: "
+        return "Libro:\n    Titulo: " + titulo + "\n    Autor: " + autor.getNombre() + "\n    Idiomas: " + idioma.getSiglas() + "\n    NumeroDescargas: "
                 + numeroDescargas;
     } 
 }
